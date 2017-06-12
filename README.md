@@ -1,1 +1,1 @@
-# ms-demo-zuul-server
+# zuul-server

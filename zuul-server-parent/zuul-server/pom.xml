@@ -3,16 +3,24 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.noveria.server</groupId>
+		<groupId>com.babcock.server</groupId>
 		<artifactId>zuul-server-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.noveria.server</groupId>
+	<groupId>com.babcock.server</groupId>
 	<artifactId>zuul-server</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	
 	<packaging>jar</packaging>
+
+	<properties>
+		<java.version>1.8</java.version>
+
+		<server.jar.name>zuul-server-${parent.version}</server.jar.name>
+		<executable.jar.postfix>exec</executable.jar.postfix>
+		<executable.server.jar.name>${server.jar.name}-${executable.jar.postfix}</executable.server.jar.name>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -51,27 +59,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>dev-zuul-server</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<config.url>http://{TODO:IPADDRESS}/config-service/</config.url>
-				<server.jar.name>dev-zuul-server</server.jar.name>
-			</properties>
-		</profile>
-		<profile>
-			<id>qa-zuul-server</id>
-			<properties>
-				<config.url>http://{TODO:IPADDRESS}/config-service/</config.url>
-				<server.jar.name>qa-zuul-server</server.jar.name>
-			</properties>
-		</profile>
-	</profiles>
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>4.9</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<finalName>${server.jar.name}</finalName>
@@ -96,7 +90,10 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>build-zuul-server-zip</id>
+						<id>build-security-server-zip</id>
+						<configuration>
+							<appendAssemblyId>true</appendAssemblyId>
+						</configuration>
 						<phase>verify</phase>
 						<goals>
 							<goal>single</goal>
@@ -137,6 +134,9 @@
 						<goals>
 							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<classifier>${executable.jar.postfix}</classifier>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
